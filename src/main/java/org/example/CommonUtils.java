@@ -71,4 +71,13 @@ public class CommonUtils {
         Object proxyObj = Proxy.newProxyInstance(clazz.getClassLoader(), new Class[]{Templates.class}, handler);
         return proxyObj;
     }
+
+    public static void rmJacksonWriteReplace() throws Exception{
+        // jackson的BaseJsonNode序列化的时候需要删掉writeReplace这个函数，不然会序列化失败
+        ClassPool classPool = ClassPool.getDefault();
+        CtClass ctClass = classPool.get("com.fasterxml.jackson.databind.node.BaseJsonNode");
+        CtMethod ctMethod = ctClass.getDeclaredMethod("writeReplace");
+        ctClass.removeMethod(ctMethod);
+        ctClass.toClass();
+    }
 }

